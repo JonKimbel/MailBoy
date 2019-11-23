@@ -1,0 +1,6 @@
+# =========================
+# Boron Files
+# =========================
+
+# Built binaries for flashing onto devices.
+*.bin
