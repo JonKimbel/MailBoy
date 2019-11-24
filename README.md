@@ -4,6 +4,21 @@ Sends you a message when mail arrives in your IRL mailbox.
 
 ## Setup
 
+### Webhooks
+
+1.  Sign up for a [Twilio](https://www.twilio.com/) account. Twilio is the
+    service that will send the text message to your phone number.
+1.  Set up a Particle account, claim your Boron, and sign up for Particle device
+    cloud if you haven't yet.
+1.  Follow [these instructions](https://www.twilio.com/docs/sms/tutorials/how-to-send-sms-messages-particle-photon#set-up-a-particle-webhook)
+    to connect Twilio to your Particle device cloud. Note that these
+    instructions show "{{}}" characters in the POST URL that you need to enter,
+    those characters should not be there.
+1.  Click "TEST" on your new webhook integration, and confirm that you get a
+    text message from Twilio.
+
+### Git configuration (only required for contributors)
+
 Run the following from this directory to set up the pre-commit checks.
 
 ```
