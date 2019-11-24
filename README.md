@@ -5,7 +5,7 @@ Sends you a message when mail arrives in your IRL mailbox.
 ## Roadmap
 
 1.  *[DONE]* Get basic code working
-1.  **[TODO]** Implement power conservation functionality
+1.  *[DONE]* Implement power conservation functionality
 1.  **[TODO]** Test on batteries, determine real-world battery life
 1.  **[TODO]** Determine approach to guarding against moisture
 1.  **[TODO]** Design 3D printable mechanism/enclosure
@@ -15,9 +15,8 @@ Sends you a message when mail arrives in your IRL mailbox.
 ## Parts
 
 *   1x [Particle Boron](https://store.particle.io/products/boron-lte)
+*   1x [large single-cell LiPo battery](https://amazon.com/gp/product/B01NAX9XYG)
 *   1x switch
-*   3x AA NiMH battery
-*   1x 3-AA battery holder
 *   3D printed parts *(TODO: design & link here)*
 
 ## Setup
@@ -50,7 +49,7 @@ Run the following from this directory to set up the pre-commit checks.
 git config core.hooksPath hooks
 ```
 
-## Compiling & Flashing
+## Compiling
 
 To compile the device code, run the following from the boron/ directory:
 
@@ -62,11 +61,17 @@ particle compile boron --saveTo=out.bin
 [Particle Boron](https://store.particle.io/products/boron-lte). It is NOT
 providing the name of the folder the code relies upon.*
 
-To flash the compiled binary to a usb-connected device:
+## Flashing
+
+To flash the compiled binary to a usb-connected device, you must first put the
+device in DFU (device firmware upgrade) mode:
 
 1.  Hold down the MODE and RESET buttons.
 1.  Release the RESET button. The LED should flash purple.
 1.  Once the LED flashes yellow, release the MODE button.
-1.  Run this flash command:
 
-        particle flash --usb out.bin
+With the LED flashing yellow, you can run this flash command:
+
+```
+particle flash --usb out.bin
+```
