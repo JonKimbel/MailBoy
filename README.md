@@ -6,6 +6,8 @@ Sends you a message when mail arrives in your IRL mailbox.
 
 1.  *[DONE]* Get basic code working
 1.  *[DONE]* Implement power conservation functionality
+1.  **[TODO]** Determine how to trigger - letters are lightweight and a simple
+    switch may be fooled by condensation weighing down the top plate.
 1.  **[TODO]** Test on batteries, determine real-world battery life
 1.  **[TODO]** Determine approach to guarding against moisture
 1.  **[TODO]** Design 3D printable mechanism/enclosure
@@ -16,7 +18,6 @@ Sends you a message when mail arrives in your IRL mailbox.
 
 *   1x [Particle Boron](https://store.particle.io/products/boron-lte)
 *   1x [large single-cell LiPo battery](https://amazon.com/gp/product/B01NAX9XYG)
-*   1x switch
 *   3D printed parts *(TODO: design & link here)*
 
 ## Setup
