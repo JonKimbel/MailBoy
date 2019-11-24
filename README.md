@@ -4,7 +4,7 @@ Sends you a message when mail arrives in your IRL mailbox.
 
 ## Roadmap
 
-1.  **[DONE]** Get basic code working
+1.  *[DONE]* Get basic code working
 1.  **[TODO]** Implement power conservation functionality
 1.  **[TODO]** Test on batteries, determine real-world battery life
 1.  **[TODO]** Determine approach to guarding against moisture
