@@ -4,14 +4,30 @@ Sends you a message when mail arrives in your IRL mailbox.
 
 ## Roadmap
 
-1.  [DONE] Get basic code working
-1.  [TODO] Implement power conservation functionality
-1.  [TODO] Determine approach to guarding against moisture
-1.  [TODO] Design 3D printable mechanism/enclosure
-1.  [TODO] Assemble
-1.  [TODO] Install
+1.  **[DONE]** Get basic code working
+1.  **[TODO]** Implement power conservation functionality
+1.  **[TODO]** Test on batteries, determine real-world battery life
+1.  **[TODO]** Determine approach to guarding against moisture
+1.  **[TODO]** Design 3D printable mechanism/enclosure
+1.  **[TODO]** Assemble final gadget
+1.  **[TODO]** Install in mailbox
+
+## Parts
+
+*   1x [Particle Boron](https://store.particle.io/products/boron-lte)
+*   1x switch
+*   4x AA NiMH battery
+*   1x 4-AA battery holder
+*   3D printed parts *(TODO: design & link here)*
 
 ## Setup
+
+### Toolchain
+
+1.  Install the Particle CLI following the steps
+    [here](https://docs.particle.io/tutorials/developer-tools/cli/).
+1.  *COMPLETELY OPTIONAL:* Set up local build toolchain following
+    [these steps](https://docs.particle.io/tutorials/developer-tools/cli/#compile-and-flash-code-locally)
 
 ### Webhooks
 
@@ -34,16 +50,7 @@ Run the following from this directory to set up the pre-commit checks.
 git config core.hooksPath hooks
 ```
 
-## Compiling
-
-### Before you begin
-
-1.  Install the Particle CLI following the steps
-    [here](https://docs.particle.io/tutorials/developer-tools/cli/).
-1.  COMPLETELY OPTIONAL: Set up local build toolchain following
-    [these steps](https://docs.particle.io/tutorials/developer-tools/cli/#compile-and-flash-code-locally)
-
-### Compiling & flashing
+## Compiling & Flashing
 
 To compile the device code, run the following from the boron/ directory:
 
@@ -51,9 +58,9 @@ To compile the device code, run the following from the boron/ directory:
 particle compile boron --saveTo=out.bin
 ```
 
-NOTE: The "boron" in this command refers to the device model, the
+*NOTE: The "boron" in this command refers to the device model, the
 [Particle Boron](https://store.particle.io/products/boron-lte). It is NOT
-providing the name of the folder the code relies upon.
+providing the name of the folder the code relies upon.*
 
 To flash the compiled binary to a usb-connected device:
 
