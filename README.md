@@ -2,6 +2,15 @@
 
 Sends you a message when mail arrives in your IRL mailbox.
 
+## Roadmap
+
+1.  [DONE] Get basic code working
+1.  [TODO] Implement power conservation functionality
+1.  [TODO] Determine approach to guarding against moisture
+1.  [TODO] Design 3D printable mechanism/enclosure
+1.  [TODO] Assemble
+1.  [TODO] Install
+
 ## Setup
 
 ### Webhooks
