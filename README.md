@@ -16,8 +16,8 @@ Sends you a message when mail arrives in your IRL mailbox.
 
 *   1x [Particle Boron](https://store.particle.io/products/boron-lte)
 *   1x switch
-*   4x AA NiMH battery
-*   1x 4-AA battery holder
+*   3x AA NiMH battery
+*   1x 3-AA battery holder
 *   3D printed parts *(TODO: design & link here)*
 
 ## Setup
