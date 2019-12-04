@@ -8,8 +8,9 @@ Sends you a message when mail arrives in your IRL mailbox.
 1.  *[DONE]* Implement power conservation functionality
 1.  **[TODO]** Determine how to trigger - letters are lightweight and a simple
     switch may be fooled by condensation weighing down the top plate.
-1.  *[IN PROGRESS]* Test on batteries, determine real-world battery life
-1.  **[TODO]** Check for failed send attempts, retry
+1.  *[DONE]* Test on batteries, determine real-world battery life (1 week)
+1.  *[TODO]* Change sleep strategy and test on batteries again
+1.  **[IN PROGRESS]** Check for failed send attempts, retry
 1.  **[TODO]** Determine approach to guarding against moisture
 1.  **[TODO]** Design 3D printable mechanism/enclosure
 1.  **[TODO]** Assemble final gadget
