@@ -10,7 +10,7 @@ Sends you a message when mail arrives in your IRL mailbox.
 1.  **[TODO]** Change sleep strategy
 1.  **[TODO]** Monitor battery level & charging state, ignore button & send text
     when charging finished
-1.  **[TODO]** Send battery level along with button text messages
+1.  *[DONE]* Send battery level along with button text messages
 1.  **[IN PROGRESS]** Check for failed send attempts, retry
 1.  **[TODO]** Test on batteries again
 1.  **[TODO]** Determine how to trigger - letters are lightweight and a simple

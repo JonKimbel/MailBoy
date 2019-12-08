@@ -1,4 +1,4 @@
-// API reference for the Boron:
+// API reference:
 // https://docs.particle.io/reference/device-os/firmware/boron
 
 #include <Wire.h>
@@ -8,6 +8,7 @@ bool sendSms();
 
 // Constants.
 const int BUTTON_PIN = D5;
+const FuelGauge fuel;
 
 // Variables.
 // TODO: add in logic for capping number of retries.
@@ -45,9 +46,7 @@ void loop() {
 }
 
 void sleepUntilButtonPressOrTimeout() {
-  // Sleep until the button is pressed. Using SLEEP_NETWORK_STANDBY for now to
-  // avoid our SIM being blocked by the network while testing, see docs:
-  // https://docs.particle.io/reference/device-os/firmware/boron/#sleep-sleep-
+  // Sleep until the button is pressed.
   Serial.println("MailBoy sleeping until next button press...");
   SleepResult sleep_result = System.sleep(
       /* wakeUpPin = */ BUTTON_PIN, /* edgeTriggerMode = */ FALLING,
@@ -69,6 +68,11 @@ void sleepUntilButtonPressOrTimeout() {
 
 void retrySend() {
   Serial.println("MailBoy sleeping for a minute and then retrying send...");
+  // SLEEP_NETWORK_STANDBY saves more power for short sleeps and avoids our SIM
+  // being blocked by the network for connecting & disconnecting too rapidly.
+  // See docs:
+  // https://docs.particle.io/reference/device-os/firmware/boron/#sleep-sleep-
+  //
   // TODO: figure out a better combination of arguments to ensure we don't wake
   // up for pin interactions.
   System.sleep(
@@ -84,7 +88,17 @@ void retrySend() {
 
 bool sendSms() {
   Serial.println("Attempting to send SMS.");
-  bool success = Particle.publish("twilio_sms", "You have mail!", PRIVATE);
+
+  char message[29];
+  char battery_percentage[5];
+  dtostrf(
+    	/* value = */ fuel.getSoC(),
+    	/* min width of output = */ 1,
+    	/* places after decimal = */ 0,
+    	/* output = */ battery_percentage);
+  sprintf(message, "You have mail! Battery: %s", battery_percentage);
+
+  bool success = Particle.publish("twilio_sms", message, PRIVATE);
   if (!success) {
     Serial.println("Failed!");
   }
