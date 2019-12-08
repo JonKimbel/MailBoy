@@ -4,10 +4,13 @@
 #include <Wire.h>
 
 // Function declaration.
+void sleepUntilButtonPress();
+void retrySend();
 bool sendSms();
 
 // Constants.
-const int BUTTON_PIN = D5;
+const int BUTTON_PIN = D8; // This is the only pin that can wake Boron from deep
+                           // sleep.
 const FuelGauge fuel;
 
 // Variables.
@@ -24,12 +27,11 @@ void setup() {
   // Read messages sent over serial by running 'particle serial monitor'.
   Serial.begin(9600);
 
-  pinMode(BUTTON_PIN, INPUT_PULLUP);
-  Serial.println("Setup complete. MailBoy ready for input.");
+  pinMode(BUTTON_PIN, INPUT_PULLDOWN);
 
   // If the button is already pressed, it's possible we reset from power loss
   // and never sent an SMS. Send one now just in case.
-  if (digitalRead(BUTTON_PIN) == LOW) {
+  if (digitalRead(BUTTON_PIN) == HIGH) {
     Serial.println("MailBoy woke up with button already depressed.");
     if (!sendSms()) {
       retrying = true;
@@ -41,29 +43,17 @@ void loop() {
   if (retrying) {
     retrySend();
   } else {
-    sleepUntilButtonPressOrTimeout();
+    sleepUntilButtonPress();
   }
 }
 
-void sleepUntilButtonPressOrTimeout() {
-  // Sleep until the button is pressed.
+void sleepUntilButtonPress() {
   Serial.println("MailBoy sleeping until next button press...");
-  SleepResult sleep_result = System.sleep(
-      /* wakeUpPin = */ BUTTON_PIN, /* edgeTriggerMode = */ FALLING,
-      /* sleep mode = */ SLEEP_NETWORK_STANDBY,
-      /* seconds (0 = no timeout) = */ 0);
-
-  if (!sleep_result.wokenUpByPin()) {
-    // Only send SMS if we're woken up by the button being pressed. We don't set
-    // a timeout, but docs say the Boron won't sleep for more than 24 days in a
-    // row.
-    return;
-  }
-
-  Serial.println("MailBoy detected button press, attempting send...");
-  if (!sendSms()) {
-    retrying = true;
-  }
+  // Put the device into deep sleep until awakened by a high level on pin D8.
+  //
+  // When the device is woken back up, all RAM (including the program counter)
+  // will be reset, so we'll start back in the setup() function.
+  System.sleep(SLEEP_MODE_SOFTPOWEROFF);
 }
 
 void retrySend() {
@@ -76,7 +66,7 @@ void retrySend() {
   // TODO: figure out a better combination of arguments to ensure we don't wake
   // up for pin interactions.
   System.sleep(
-      /* wakeUpPin = */ BUTTON_PIN, /* edgeTriggerMode = */ FALLING,
+      /* wakeUpPin = */ BUTTON_PIN, /* edgeTriggerMode = */ RISING,
       /* sleep mode = */ SLEEP_NETWORK_STANDBY,
       /* seconds (0 = no timeout) = */ 60);
 
