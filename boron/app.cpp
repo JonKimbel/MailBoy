@@ -34,10 +34,10 @@ const int CHARGE_DETECT_PIN = D5;
 
 const int MAX_RETRIES = 5;
 
-const FuelGauge fuel;
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Variables.
+
+FuelGauge fuel;
 
 bool charging = false;
 bool chargingSmsSent = false;
@@ -62,8 +62,8 @@ void setup() {
     Serial.println("MailBoy woke up connected to USB power.");
     charging = true;
   } else if (digitalRead(BUTTON_PIN) == HIGH) {
-    // If the button is already pressed, it's possible we reset from power loss
-    // and never sent an SMS. Send one now just in case.
+    // If the button is already pressed, we likely just woke from sleep due to
+    // it being pressed. Send an SMS now.
     Serial.println("MailBoy woke up with button already depressed.");
     if (!sendSms()) {
       retrying = true;
@@ -143,14 +143,8 @@ void sleepForSeconds(int seconds) {
 bool sendSms() {
   Serial.println("Attempting to send SMS.");
 
-  char message[29];
-  char battery_percentage[5];
-  dtostrf(
-    	/* value = */ fuel.getSoC(),
-    	/* min width of output = */ 1,
-    	/* places after decimal = */ 0,
-    	/* output = */ battery_percentage);
-  sprintf(message, "You have mail! Battery: %s", battery_percentage);
+  char message[30];
+  sprintf(message, "You have mail! Battery: %.0f%%", fuel.getSoC());
 
   bool success = Particle.publish("twilio_sms", message, PRIVATE);
   if (!success) {
