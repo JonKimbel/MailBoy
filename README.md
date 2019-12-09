@@ -11,7 +11,7 @@ Sends you a message when mail arrives in your IRL mailbox.
 1.  *[DONE]* Monitor battery level & charging state, ignore button & send text
     when charging finished
 1.  *[DONE]* Send battery level along with button text messages
-1.  **[IN PROGRESS]** Check for failed send attempts, retry
+1.  *[DONE]* Check for failed send attempts, retry
 1.  **[TODO]** Test on batteries again
 1.  **[TODO]** Determine how to trigger - letters are lightweight and a simple
     switch may be fooled by condensation weighing down the top plate.
