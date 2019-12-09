@@ -82,3 +82,16 @@ With the LED flashing yellow, you can run this flash command:
 ```
 particle flash --usb out.bin
 ```
+
+## Avoiding issues with the Boron
+
+1.  Power the device sufficiently. Try running your code while connected to a
+    known-good high-current USB charger, or use a Li-Po battery while debugging.
+1.  Don't reset the device too often. Re-connecting to the network repeatedly
+    seems to make the network a bit sluggish - documentation for
+    Particle.sleep() suggests carriers will temporarily ban SIM cards for this
+    behavior.
+1.  It's not well-documented, but if the device is blinking magenta it's trying
+    to update its firmware over the cellular network. To avoid a long wait, put
+    the device in DFU mode (steps under [flashing section](#flashing)) and run
+    `particle update`.
