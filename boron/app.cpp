@@ -85,7 +85,12 @@ void sleepUntilButtonPress() {
   //
   // When the device is woken back up, all RAM (including the program counter)
   // will be reset, so we'll start back in the setup() function.
-  System.sleep(SLEEP_MODE_SOFTPOWEROFF);
+  //
+  // Why not SLEEP_MODE_SOFTPOWEROFF? It seems that SLEEP_MODE_SOFTPOWEROFF only
+  // turns off the cellular radio, which:
+  // 1. doesn't save enough power (the bright LED pulses forever)
+  // 2. puts us into an unrecoverable state (since we never call Cellular.on()).
+  System.sleep(SLEEP_MODE_DEEP);
 }
 
 void monitorChargeLevel() {
