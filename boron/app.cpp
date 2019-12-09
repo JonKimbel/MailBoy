@@ -92,6 +92,10 @@ void sleepUntilButtonPress() {
   // 1. doesn't save enough power (the bright LED pulses forever)
   // 2. puts us into an unrecoverable state (since we never call Cellular.on()).
   System.sleep(SLEEP_MODE_DEEP);
+
+  // 2500mAh battery longevity notes:
+  //   SLEEP_NETWORK_STANDBY results in 1 week of power.
+  //   SLEEP_MODE_DEEP currently under test.
 }
 
 void monitorChargeLevel() {
