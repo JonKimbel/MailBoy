@@ -39,7 +39,6 @@ const int MAX_RETRIES = 5;
 
 FuelGauge fuel;
 
-bool charging = false;
 bool chargingSmsSent = false;
 
 bool retrying = false;
@@ -60,7 +59,6 @@ void setup() {
 
   if (digitalRead(CHARGE_DETECT_PIN) == HIGH) {
     Serial.println("MailBoy woke up connected to USB power.");
-    charging = true;
   } else if (digitalRead(BUTTON_PIN) == HIGH) {
     // If the button is already pressed, we likely just woke from sleep due to
     // it being pressed. Send an SMS now.
@@ -74,7 +72,7 @@ void setup() {
 void loop() {
   if (retrying) {
     retrySend();
-  } else if (charging) {
+  } else if (digitalRead(CHARGE_DETECT_PIN) == HIGH) {
     monitorChargeLevel();
   } else {
     sleepUntilButtonPress();
@@ -94,10 +92,6 @@ void monitorChargeLevel() {
   Serial.println(
       "MailBoy sleeping for 10s and then checking charge level...");
   sleepForSeconds(10);
-
-  if (digitalRead(CHARGE_DETECT_PIN) != HIGH) {
-    charging = false;
-  }
 
   if (fuel.getSoC() > 80 && !chargingSmsSent) {
     chargingSmsSent = true;
