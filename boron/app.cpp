@@ -32,6 +32,8 @@ const int BUTTON_PIN = D8;
 // supply and won't run into issues with the 100MΩ input impedance of GPIO pins.
 const int CHARGE_DETECT_PIN = D5;
 
+const int MAX_RETRIES = 5;
+
 const FuelGauge fuel;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -40,8 +42,8 @@ const FuelGauge fuel;
 bool charging = false;
 bool chargingSmsSent = false;
 
-// TODO: add in logic for capping number of retries.
 bool retrying = false;
+int retryCount = 0;
 
 // Auto-connect to the Particle cloud before running any code in this file.
 // If we can't connect we can't send messages, so it doesn't matter if we end up
@@ -113,6 +115,14 @@ void retrySend() {
   Serial.println("MailBoy retrying send...");
   if(sendSms()) {
     retrying = false;
+    retryCount = 0;
+  } else {
+    retryCount++;
+  }
+
+  if (retryCount == MAX_RETRIES) {
+    retrying = false;
+    retryCount = 0;
   }
 }
 
