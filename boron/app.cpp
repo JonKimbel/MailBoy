@@ -3,17 +3,43 @@
 
 #include <Wire.h>
 
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Function declaration.
+
 void sleepUntilButtonPress();
+void monitorChargeLevel();
 void retrySend();
+void sleepForSeconds(int seconds);
 bool sendSms();
 
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Constants.
-const int BUTTON_PIN = D8; // This is the only pin that can wake Boron from deep
-                           // sleep.
+
+// D8 is the only pin that can wake Boron from deep sleep.
+// It should be attached to a button that connects to 3V3 when depressed.
+const int BUTTON_PIN = D8;
+
+// This pin should be connected to the middle of a voltage divider running from
+// VUSB to GND. A voltage divider is required because the GPIO pins can't take
+// 5V, so we need to knock it down to 3V3 logic levels to read it.
+//
+// To account for the Boron's minimum recognized high voltage (0.7*3.3V) and the
+// possibility that the USB supply outputs more than 5V, the divider needs to
+// supply somewhere between 47% to 60% of the VUSB voltage to this pin.
+//
+// For simplicity's sake, I recommend using 2x 100kΩ resistors. The high
+// resistance means our detector will sip a tiny amount of power from the USB
+// supply and won't run into issues with the 100MΩ input impedance of GPIO pins.
+const int CHARGE_DETECT_PIN = D5;
+
 const FuelGauge fuel;
 
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Variables.
+
+bool charging = false;
+bool chargingSmsSent = false;
+
 // TODO: add in logic for capping number of retries.
 bool retrying = false;
 
@@ -28,10 +54,14 @@ void setup() {
   Serial.begin(9600);
 
   pinMode(BUTTON_PIN, INPUT_PULLDOWN);
+  pinMode(CHARGE_DETECT_PIN, INPUT);
 
-  // If the button is already pressed, it's possible we reset from power loss
-  // and never sent an SMS. Send one now just in case.
-  if (digitalRead(BUTTON_PIN) == HIGH) {
+  if (digitalRead(CHARGE_DETECT_PIN) == HIGH) {
+    Serial.println("MailBoy woke up connected to USB power.");
+    charging = true;
+  } else if (digitalRead(BUTTON_PIN) == HIGH) {
+    // If the button is already pressed, it's possible we reset from power loss
+    // and never sent an SMS. Send one now just in case.
     Serial.println("MailBoy woke up with button already depressed.");
     if (!sendSms()) {
       retrying = true;
@@ -42,6 +72,8 @@ void setup() {
 void loop() {
   if (retrying) {
     retrySend();
+  } else if (charging) {
+    monitorChargeLevel();
   } else {
     sleepUntilButtonPress();
   }
@@ -56,8 +88,35 @@ void sleepUntilButtonPress() {
   System.sleep(SLEEP_MODE_SOFTPOWEROFF);
 }
 
+void monitorChargeLevel() {
+  Serial.println(
+      "MailBoy sleeping for 10s and then checking charge level...");
+  sleepForSeconds(10);
+
+  if (digitalRead(CHARGE_DETECT_PIN) != HIGH) {
+    charging = false;
+  }
+
+  if (fuel.getSoC() > 80 && !chargingSmsSent) {
+    chargingSmsSent = true;
+    // TODO: send a different text message when charging is complete.
+    if(!sendSms()) {
+      retrying = true;
+    }
+  }
+}
+
 void retrySend() {
   Serial.println("MailBoy sleeping for a minute and then retrying send...");
+  sleepForSeconds(60);
+
+  Serial.println("MailBoy retrying send...");
+  if(sendSms()) {
+    retrying = false;
+  }
+}
+
+void sleepForSeconds(int seconds) {
   // SLEEP_NETWORK_STANDBY saves more power for short sleeps and avoids our SIM
   // being blocked by the network for connecting & disconnecting too rapidly.
   // See docs:
@@ -68,12 +127,7 @@ void retrySend() {
   System.sleep(
       /* wakeUpPin = */ BUTTON_PIN, /* edgeTriggerMode = */ RISING,
       /* sleep mode = */ SLEEP_NETWORK_STANDBY,
-      /* seconds (0 = no timeout) = */ 60);
-
-  Serial.println("MailBoy retrying send...");
-  if(sendSms()) {
-    retrying = false;
-  }
+      /* seconds (0 = no timeout) = */ seconds);
 }
 
 bool sendSms() {
