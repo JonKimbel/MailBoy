@@ -29,7 +29,8 @@ const int BUTTON_PIN = D8;
 //
 // For simplicity's sake, I recommend using 2x 100kΩ resistors. The high
 // resistance means our detector will sip a tiny amount of power from the USB
-// supply and won't run into issues with the 100MΩ input impedance of GPIO pins.
+// supply, but the resistance isn't so high that you'll run into issues with the
+// 100MΩ input impedance of GPIO pins interfering.
 const int CHARGE_DETECT_PIN = D5;
 
 const int MAX_RETRIES = 5;
