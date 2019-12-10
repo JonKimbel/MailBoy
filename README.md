@@ -13,6 +13,8 @@ Sends you a message when mail arrives in your IRL mailbox.
 1.  *[DONE]* Send battery level along with button text messages
 1.  *[DONE]* Check for failed send attempts, retry
 1.  **[TODO]** Test on batteries again
+1.  **[TODO]** Fix bug where device will sleep and immediately wake back up due
+    to high level on D8
 1.  **[TODO]** Send SMS on charger unplug
 1.  **[TODO]** Determine how to trigger - letters are lightweight and a simple
     switch may be fooled by condensation weighing down the top plate.
